@@ -1,7 +1,11 @@
-name = "hw6"
+name = "HashCode"
 uuid = "44f980ee-618b-4e5f-94d8-c38dcaf837f0"
 authors = ["Rom Fradkin <fradkin.rom@gmail.com> and contributors"]
 version = "1.0.0-DEV"
+
+[deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+HashCode2014 = "7bbed249-721d-42ac-b1f6-7cf884be0fbe"
 
 [compat]
 julia = "1.9"
