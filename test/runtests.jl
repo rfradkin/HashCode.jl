@@ -9,7 +9,7 @@ include("../src/CustomType.jl")
     mapObject = CityMap(city.junctions,city.streets)
     res = getCarLocation(mapObject,1)
     @test res === 4517
-    addCarMove(mapObject,1,15)
+    addCarMove(mapObject,1,15, 0)
     res2 = getCarLocation(mapObject,1)
     @test res2 === 15
     ans3 =  [(8261, 1),(9775, 1)]
