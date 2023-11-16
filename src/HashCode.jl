@@ -4,6 +4,11 @@ module HashCode
 
     using Random: AbstractRNG, default_rng
 
+    """
+        custom_walk(rng, city)
+
+    does a custom walk
+    """
     function custom_walk(rng::AbstractRNG, city::City)
         (; total_duration, nb_cars, starting_junction, streets) = city
         itineraries = Vector{Vector{Int}}(undef, nb_cars)
