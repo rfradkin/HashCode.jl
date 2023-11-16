@@ -1,5 +1,0 @@
-#!/Users/rfradkin/Library/Mobile Documents/com~apple~CloudDocs/MIT/18.C25/HashCode/.CondaPkg/env/bin/python3.12
-import sys
-from lib2to3.main import main
-
-sys.exit(main("lib2to3.fixes"))

@@ -1,5 +1,0 @@
-#!/Users/rfradkin/Library/Mobile Documents/com~apple~CloudDocs/MIT/18.C25/HashCode/.CondaPkg/env/bin/python3.12
-
-import pydoc
-if __name__ == '__main__':
-    pydoc.cli()
