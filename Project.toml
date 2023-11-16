@@ -6,6 +6,7 @@ version = "1.0.0-DEV"
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 HashCode2014 = "7bbed249-721d-42ac-b1f6-7cf884be0fbe"
+Random = "9a3f8284-a2c9-505d-8b9b-7a1cc349470b" 
 
 [compat]
 julia = "1.9"
