@@ -1,14 +1,14 @@
 ```@meta
-CurrentModule = hw6
+CurrentModule = HashCode
 ```
 
-# hw6
+# HashCode
 
-Documentation for [hw6](https://github.com/rfradkin/hw6.jl).
+Documentation for [HashCode](https://github.com/rfradkin/HashCode.jl).
 
 ```@index
 ```
 
 ```@autodocs
-Modules = [hw6]
+Modules = [HashCode]
 ```

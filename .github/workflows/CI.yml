@@ -62,6 +62,6 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Documenter: DocMeta, doctest
-            using hw6
-            DocMeta.setdocmeta!(hw6, :DocTestSetup, :(using hw6); recursive=true)
-            doctest(hw6)'
+            using HashCode
+            DocMeta.setdocmeta!(HashCode, :DocTestSetup, :(using HashCode); recursive=true)
+            doctest(HashCode)'
