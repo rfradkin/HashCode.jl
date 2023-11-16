@@ -1,5 +1,6 @@
 # using CustomType
 using Test
+using HashCode2014
 
 @testset "CustomType.jl" begin
     # Write your tests here.
