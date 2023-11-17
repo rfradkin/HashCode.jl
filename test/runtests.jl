@@ -1,13 +1,13 @@
 # using CustomType
 using Test
 using HashCode2014
-include("../src/CustomType.jl")
+include("../src/Hashcode.jl")
 
 @testset "jl" begin
     # Write your tests here.
     city = HashCode2014.read_city()
-    mapObject = CustomType.CityMap(city.junctions,city.streets)
-    res = CustomType.getCarLocation(mapObject,1)
+    mapObject = HashCode.CityMap(city.junctions,city.streets)
+    res = HashCode.getCarLocation(mapObject,1)
     @test res === 4517
     # addCarMove(mapObject,1,15, 0)
     # res2 = getCarLocation(mapObject,1)
