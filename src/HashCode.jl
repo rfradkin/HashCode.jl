@@ -79,10 +79,6 @@ module HashCode
     
             new(junctions, streets, carPaths, [4517])
         end
-    
-        function newFunc()
-            return "hi"
-        end
     end    
 
     """
