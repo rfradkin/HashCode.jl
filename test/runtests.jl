@@ -1,7 +1,7 @@
 # using CustomType
 using Test
 using HashCode2014
-include("../src/CustomType.jl")
+using CustomType
 
 @testset "jl" begin
     # Write your tests here.
