@@ -1,4 +1,4 @@
-begin    
+module CustomType    
     using HashCode2014
     using BenchmarkTools
 
@@ -46,6 +46,10 @@ begin
         return getCarLocation(cityMap.cars[carNum])
     end
 
+
+    """
+    test
+    """
     function addCarMove(cityMap:: CityMap, carNum::Int, juncNum :: Int, timeAdded :: Int)
         cityMap.cars[carNum].timeTraveled += timeAdded
         push!(cityMap.cars[carNum].path,juncNum)
