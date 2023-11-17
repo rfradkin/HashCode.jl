@@ -1,7 +1,6 @@
 module HashCode
     using HashCode2014
     using BenchmarkTools
-    include("./CustomType.jl")
 
     using Random: AbstractRNG, default_rng
 
