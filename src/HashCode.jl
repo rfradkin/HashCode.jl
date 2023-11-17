@@ -112,11 +112,10 @@ module HashCode
     Returns:
     - Nothing
     """
-    function addCarMove(cityMap::CityMap, carNum::Int, juncNum::Int, timeAdded::Int)
-        cityMap.cars[carNum].timeTraveled += timeAdded
+    function addCarMove(cityMap::CityMap, carNum::Int, juncNum::Int)
         push!(cityMap.cars[carNum].path, juncNum)
         push!(cityMap.visitedJuncs, juncNum)
-    end
+    end 
     
     
     """

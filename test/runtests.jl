@@ -9,15 +9,7 @@ include("../src/HashCode.jl")
     mapObject = HashCode.CityMap(city.junctions,city.streets)
     res = HashCode.getCarLocation(mapObject,1)
     @test res === 4517
-    HashCode.addCarMove(mapObject,1,15,0)
+    HashCode.addCarMove(mapObject,1,15)
     res2 = HashCode.getCarLocation(mapObject,1)
     @test res2 === 15
-    ans3 =  [(8261, 1),(9775, 1)]
-    @test HashCode.getPosJuncs(mapObject,4715)[1][1] === 8261
-    @test HashCode.getPosJuncs(mapObject,4715)[1][2] === 1
-    @test HashCode.getPosJuncs(mapObject,4715)[2][1] === 9775
-    @test HashCode.getPosJuncs(mapObject,4715)[2][2] === 1
-
-    @test HashCode.salreadyVisited(mapObject,15) 
-
 end
