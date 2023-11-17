@@ -8,72 +8,72 @@ module HashCode
     # new change
 
     ### Custom types
-    # struct CarPath
-    #     carNum :: Int
-    #     path :: Vector{Int}
-    #     timeTraveled :: Int
+    struct CarPath
+        carNum :: Int
+        path :: Vector{Int}
+        timeTraveled :: Int
         
-    #     function CarPath(carNum::Int)
-    #         new(carNum,[4517])
-    #     end
+        function CarPath(carNum::Int)
+            new(carNum,[4517])
+        end
 
-    # end
+    end
 
-    # """
-    # custom_walk(rng, city)
+    """
+    custom_walk(rng, city)
 
-    # custom type stuff
-    # """
-    # function getCarLocation(car::CarPath)
-    #     return car.path[end]
-    # end
+    custom type stuff
+    """
+    function getCarLocation(car::CarPath)
+        return car.path[end]
+    end
 
-    # struct CityMap
-    #     nodes::Vector{Junction}
-    #     edges::Vector{Street}
-    #     cars::Vector{CarPath}
-    #     visitedJuncs :: Vector{Int}
+    struct CityMap
+        nodes::Vector{Junction}
+        edges::Vector{Street}
+        cars::Vector{CarPath}
+        visitedJuncs :: Vector{Int}
 
-    #     function CityMap(junctions::Vector{Junction},streets::Vector{Street})
-    #         carPaths = []
-    #         for i in 1:8
-    #             push!(carPaths,CarPath(i))
-    #         end
+        function CityMap(junctions::Vector{Junction},streets::Vector{Street})
+            carPaths = []
+            for i in 1:8
+                push!(carPaths,CarPath(i))
+            end
     
-    #         new(junctions,streets,carPaths,[4517])
-    #     end
+            new(junctions,streets,carPaths,[4517])
+        end
 
-    #     function newFunc()
-    #         return "hi"
-    #     end
-    # end
+        function newFunc()
+            return "hi"
+        end
+    end
 
-    # function getCarLocation(cityMap:: CityMap,carNum::Int)
-    #     return getCarLocation(cityMap.cars[carNum])
-    # end
+    function getCarLocation(cityMap:: CityMap,carNum::Int)
+        return getCarLocation(cityMap.cars[carNum])
+    end
 
-    # function addCarMove(cityMap:: CityMap, carNum::Int, juncNum :: Int, timeAdded :: Int)
-    #     cityMap.cars[carNum].timeTraveled += timeAdded
-    #     push!(cityMap.cars[carNum].path,juncNum)
-    #     push!(cityMap.visitedJuncs,juncNum)
-    # end
+    function addCarMove(cityMap:: CityMap, carNum::Int, juncNum :: Int, timeAdded :: Int)
+        cityMap.cars[carNum].timeTraveled += timeAdded
+        push!(cityMap.cars[carNum].path,juncNum)
+        push!(cityMap.visitedJuncs,juncNum)
+    end
 
-    # function alreadyVisited(cityMap:: CityMap, juncNum :: Int)
-    #     return juncNum in cityMap.visitedJuncs
-    # end
+    function alreadyVisited(cityMap:: CityMap, juncNum :: Int)
+        return juncNum in cityMap.visitedJuncs
+    end
 
-    # function getPosJuncs(cityMap::CityMap,curJunc::Int)
-    #     posJuncs = []
-    #     for edge in cityMap.edges
-    #         if edge.endpointA === curJunc
-    #             push!(posJuncs,(edge.endpointB,edge.duration))
-    #         end
-    #         if edge.endpointB === curJunc && edge.bidirectional
-    #             push!(posJuncs,(edge.endpointA,edge.duration))
-    #         end
-    #     end
-    #     return posJuncs
-    # end
+    function getPosJuncs(cityMap::CityMap,curJunc::Int)
+        posJuncs = []
+        for edge in cityMap.edges
+            if edge.endpointA === curJunc
+                push!(posJuncs,(edge.endpointB,edge.duration))
+            end
+            if edge.endpointB === curJunc && edge.bidirectional
+                push!(posJuncs,(edge.endpointA,edge.duration))
+            end
+        end
+        return posJuncs
+    end
         
 
     ###
