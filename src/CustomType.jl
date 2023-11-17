@@ -13,6 +13,11 @@ begin
 
     end
 
+    """
+    custom_walk(rng, city)
+
+    custom type stuff
+    """
     function getCarLocation(car::CarPath)
         return car.path[end]
     end
