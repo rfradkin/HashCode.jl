@@ -10,5 +10,5 @@ Documentation for [HashCode](https://github.com/rfradkin/HashCode.jl).
 ```
 
 ```@autodocs
-Modules = [HashCode, CustomTypes]
+Modules = [HashCode]
 ```
