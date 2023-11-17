@@ -1,4 +1,4 @@
-# using HashCode
+using HashCode
 using Documenter
 
 DocMeta.setdocmeta!(HashCode, :DocTestSetup, :(using HashCode); recursive=true)
