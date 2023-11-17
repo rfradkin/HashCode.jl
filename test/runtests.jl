@@ -6,8 +6,8 @@ include("../src/CustomType.jl")
 @testset "jl" begin
     # Write your tests here.
     city = HashCode2014.read_city()
-    mapObject = CityMap(city.junctions,city.streets)
-    res = getCarLocation(mapObject,1)
+    mapObject = CustomType.CityMap(city.junctions,city.streets)
+    res = CustomType.getCarLocation(mapObject,1)
     @test res === 4517
     # addCarMove(mapObject,1,15, 0)
     # res2 = getCarLocation(mapObject,1)
