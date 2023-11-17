@@ -250,8 +250,8 @@ module HashCode
     Returns:
     - Bool: True if the connection has not been traversed, false otherwise.
     """
-    function haveTraversed(curJunc::Int, posJunc::Tuple{Int, Int})
-        return !(posJunc[1] in visitedStreets[curJunc]) && !(curJunc in visitedStreets[posJunc[1]])
+    function haveTraversed(curJunc::Int, posJunc)
+        return !in(posJunc[1],visitedStreets[curJunc]) && !in(curJunc,visitedStreets[posJunc[1]])
     end
     
     """
@@ -282,7 +282,7 @@ module HashCode
                 push!(visitedStreets[curJunc],posJunc[1])
                 push!(distances,posJunc[3])
                 DFS(city,posJunc[1],curTime + posJunc[2],maxTime)
-                
+
             end
         end
     end
