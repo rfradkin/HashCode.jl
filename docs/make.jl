@@ -1,11 +1,11 @@
 using HashCode
-using CustomTypes
+using CustomType
 using Documenter
 
 DocMeta.setdocmeta!(HashCode, :DocTestSetup, :(using HashCode); recursive=true)
 
 makedocs(;
-    modules=[HashCode, CustomTypes],
+    modules=[HashCode, CustomType],
     authors="Rom Fradkin <fradkin.rom@gmail.com> and contributors",
     repo="https://github.com/rfradkin/HashCode.jl/blob/{commit}{path}#{line}",
     sitename="HashCode.jl",
