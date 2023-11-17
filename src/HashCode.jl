@@ -6,6 +6,8 @@ module HashCode
     using Random: AbstractRNG, default_rng
 
 
+    # new change
+
     ### Custom types
     # struct CarPath
     #     carNum :: Int
