@@ -205,7 +205,19 @@ module HashCode
     
 
     city = HashCode2014.read_city()
-    #This function, given a current Junction and city object, returns the set of Junction reachable from this node
+
+    """
+    getPosJuncs(city::City, curJunc::Int)
+    
+    Finds the possible junctions and their durations reachable from the given current junction in a city map.
+    
+    Parameters:
+    - city (City): The city object containing information about nodes and edges.
+    - curJunc (Int): The current junction from which to find possible next junctions.
+    
+    Returns:
+    - Vector{Tuple{Int, Int}}: A vector of tuples representing possible next junctions and their corresponding distances and durations.
+    """
     function getJuncOptions(city:: City ,curJunc::Int)
         posJuncs = []
         juncSet = Set{Int}()
@@ -226,14 +238,37 @@ module HashCode
         return posJuncs
     end
 
-    #This function checks if an edge has been traversed by checking in the visistedStreets global object
-    function haveTraversed(curJunc::Int, posJunc)
-        return !in(posJunc[1],visitedStreets[curJunc]) && !in(curJunc,visitedStreets[posJunc[1]])
+    """
+    haveTraversed(curJunc::Int, posJunc)
+    
+    Checks if a connection between two junctions has been traversed.
+    
+    Parameters:
+    - curJunc (Int): The current junction.
+    - posJunc (Tuple{Int, Int}): A tuple representing a possible next junction and its duration.
+    
+    Returns:
+    - Bool: True if the connection has not been traversed, false otherwise.
+    """
+    function haveTraversed(curJunc::Int, posJunc::Tuple{Int, Int})
+        return !(posJunc[1] in visitedStreets[curJunc]) && !(curJunc in visitedStreets[posJunc[1]])
     end
     
-
-    #This function runs DFS to find all possible edges that are reachable in the time limit
-    #This serves as a sensible upper bound for the best we could do with our 8 cars since it is sum of the edges of every reachable node
+    """
+    exploreEdgesDFS(city::City, curJunc::Int, curTime::Int, maxTime::Int)
+    
+    Runs a Depth-First Search (DFS) to find all possible edges that are reachable within the specified time limit. This function serves as a sensible upper bound for the best possible performance with 8 cars, as it calculates the sum of the distances of every reachable node.
+    
+    Parameters:
+    - city (City): The city object containing information about nodes and edges.
+    - curJunc (Int): The current junction from which to find possible next junctions.
+    - curTime (Int): The total amount of time that has elapsed up until this recursive call.
+    - maxTime (Int): The maximum time limit for the cars to travel.
+    
+    Returns:
+    - Nothing: Modifies a global variable distances, which is a list of distances of reachable edges. The sum of these distances represents the total distance and serves as an upper bound.
+    
+    """
     function DFS(city::City, curJunc::Int, curTime::Int,maxTime::Int)
         #mark that we have visited this node
         push!(visitedSet,curJunc)
