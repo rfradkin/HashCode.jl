@@ -4,10 +4,9 @@ module HashCode
 
     using Random: AbstractRNG, default_rng
 
-
-    # new change
-
-    ### Custom types
+    """
+    struct docstring
+    """
     struct CarPath
         carNum :: Int
         path :: Vector{Int}
@@ -76,7 +75,9 @@ module HashCode
     end
         
 
-    ###
+    
+
+
 
 
     """
