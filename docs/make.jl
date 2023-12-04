@@ -15,8 +15,8 @@ makedocs(;
         assets=String[],
     ),
     pages=[
-        "Home" => "index.md",
-        "New Page" => "newpage.md"
+        "Docstrings" => "index.md",
+        "Implementation and Performance" => "discussion.md"
     ],
 )
 

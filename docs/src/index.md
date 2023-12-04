@@ -2,7 +2,7 @@
 CurrentModule = HashCode
 ```
 
-# HashCode
+# HashCode Docstrings
 
 Documentation for [HashCode](https://github.com/rfradkin/HashCode.jl).
 
