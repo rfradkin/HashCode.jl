@@ -1,12 +1,35 @@
 # HashCode
 
-# Installation
-To install HashCode.jl, open the Julia REPL and run the following command:
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://rfradkin.github.io/HashCode.jl/stable/)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://rfradkin.github.io/HashCode.jl/dev/)
+[![Build Status](https://github.com/rfradkin/HashCode.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/rfradkin/HashCode.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Coverage](https://codecov.io/gh/rfradkin/HashCode.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/rfradkin/HashCode.jl)
+
+
+## Installation
+Clone the repository to your local machine:
+```
+git clone git@github.com:rfradkin/HashCode.jl.git
+```
+Change into the newly cloned repository:
+```
+cd HashCode.jl
+```
+Open the Julia REPL in the terminal:
+```
+julia
+```
+In the Julia REPL, activate the project to use the correct environment:
 ```
 import Pkg
-Pkg.add("HashCode")
+Pkg.activate(".")
+```
+Install the project dependencies:
+```
+Pkg.instantiate()
 ```
 ## Quickstart
+For an example of the custom walk usage:
 ```
 using HashCode
 
@@ -20,9 +43,21 @@ solution = custom_walk(rng, city)
 # Print the generated solution
 println(solution)
 ```
+To get an upper bound distance:
+```
+# Calculate an upper bound on the distance by performing a Depth-First Search (DFS)
+# Run once for a 54,000-seconds bound
+visitedSet = Set{Int}([])
+visitedStreets = [Set{Int}([]) for i in 1:length(city.streets)]
+distances = []
+DFS(city, 4517, 0, 54_000)
+println("54,000 Sec Bound: ", sum(distances))
+```
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://rfradkin.github.io/HashCode.jl/stable/)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://rfradkin.github.io/HashCode.jl/dev/)
-[![Build Status](https://github.com/rfradkin/HashCode.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/rfradkin/HashCode.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![Coverage](https://codecov.io/gh/rfradkin/HashCode.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/rfradkin/HashCode.jl)
-
+## Testing
+To run the unit tests, in a Julia REPL:
+```
+import Pkg
+Pkg.activate(".")
+Pkg.test()
+```
