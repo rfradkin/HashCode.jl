@@ -266,7 +266,6 @@ module HashCode
     
     Returns:
     - Nothing: Modifies a global variable distances, which is a list of distances of reachable edges. The sum of these distances represents the total distance and serves as an upper bound.
-    
     """
     function DFS(city::City, curJunc::Int, curTime::Int,maxTime::Int)
         #mark that we have visited this node
@@ -284,6 +283,22 @@ module HashCode
 
             end
         end
+    end
+
+    """
+    isFeasible(solution::HashCode2014.Solution, city::HashCode2014.City)
+
+    Checks the feasibility of a given solution within the context of the provided city.
+
+    Parameters:
+    - solution (HashCode2014.Solution): The solution to be checked for feasibility.
+    - city (HashCode2014.City): The city object containing information about nodes and edges.
+
+    Returns:
+    - Bool: True if the solution is feasible within the given city, False otherwise.
+    """
+    function isFeasible(solution::HashCode2014.Solution, city::HashCode2014.City)
+        is_feasible(solution, city)
     end
 
     #Run once for 54000 bound

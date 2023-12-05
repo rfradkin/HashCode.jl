@@ -58,3 +58,7 @@ import Pkg
 Pkg.activate(".")
 Pkg.test()
 ```
+To check the feasibilty, pass the solution and the HashCode2014 city to HashCode isFeasible:
+```
+isFeasible(solution::HashCode2014.Solution, city::HashCode2014.City)
+```

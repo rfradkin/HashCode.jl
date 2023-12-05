@@ -4,7 +4,6 @@ using HashCode2014
 include("../src/HashCode.jl")
 
 @testset "jl" begin
-    # Write your tests here.
     city = HashCode2014.read_city()
     mapObject = HashCode.CityMap(city.junctions,city.streets)
     res = HashCode.getCarLocation(mapObject,1)
