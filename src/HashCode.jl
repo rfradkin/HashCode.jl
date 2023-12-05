@@ -112,10 +112,11 @@ module HashCode
     Returns:
     - Nothing
     """
-    function addCarMove(cityMap::CityMap, carNum::Int, juncNum::Int)
+    function addCarMove(cityMap::CityMap, carNum::Int, juncNum::Int, timeAdded::Int)
+        # cityMap.cars[carNum].timeTraveled += timeAdded
         push!(cityMap.cars[carNum].path, juncNum)
         push!(cityMap.visitedJuncs, juncNum)
-    end 
+    end
     
     
     """
@@ -159,51 +160,7 @@ module HashCode
         return posJuncs
     end    
         
-    """
-    custom_walk(rng, city)
-    
-    Performs a custom walk to generate itineraries for vehicles in a given city.
-    
-    Parameters:
-    - rng (AbstractRNG): The random number generator.
-    - city (City): The city information containing details such as total duration, number of cars, starting junction, and streets.
-    
-    Returns:
-    - Solution: A solution object containing generated itineraries for each car.
-    """
-    function custom_walk(rng::AbstractRNG, city::City)
-        (; total_duration, nb_cars, starting_junction, streets) = city
-        itineraries = Vector{Vector{Int}}(undef, nb_cars)
-        for c in 1:nb_cars
-            itinerary = [starting_junction]
-            duration = 0
-            visited_streets = Set{Int}()
-            while true
-                current_junction = last(itinerary)
-                candidates = [
-                    (s, street) for (s, street) in enumerate(streets) if (
-                        HashCode2014.is_street_start(current_junction, street) &&
-                        duration + street.duration <= total_duration &&
-                        !(s in visited_streets)
-                    )
-                ]
-                if isempty(candidates)
-                    break
-                else
-                    s, street = rand(rng, candidates)
-                    next_junction = HashCode2014.get_street_end(current_junction, street)
-                    push!(itinerary, next_junction)
-                    duration += street.duration
-                    push!(visited_streets, s)
-                end
-            end
-            itineraries[c] = itinerary
-        end
-        return Solution(itineraries)
-    end
-    
 
-    city = HashCode2014.read_city()
 
     """
     getPosJuncs(city::City, curJunc::Int)
@@ -249,8 +206,8 @@ module HashCode
     Returns:
     - Bool: True if the connection has not been traversed, false otherwise.
     """
-    function haveTraversed(curJunc::Int, posJunc)
-        return !in(posJunc[1],visitedStreets[curJunc]) && !in(curJunc,visitedStreets[posJunc[1]])
+    function haveTraversed(curJunc::Int, posJunc::Tuple{Int, Int,Int})
+        return !(posJunc[1] in visitedStreets[curJunc]) && !(curJunc in visitedStreets[posJunc[1]])
     end
     
     """
@@ -266,6 +223,7 @@ module HashCode
     
     Returns:
     - Nothing: Modifies a global variable distances, which is a list of distances of reachable edges. The sum of these distances represents the total distance and serves as an upper bound.
+    
     """
     function DFS(city::City, curJunc::Int, curTime::Int,maxTime::Int)
         #mark that we have visited this node
@@ -280,9 +238,300 @@ module HashCode
                 push!(visitedStreets[curJunc],posJunc[1])
                 push!(distances,posJunc[3])
                 DFS(city,posJunc[1],curTime + posJunc[2],maxTime)
-
+                
             end
         end
+    end
+
+
+    """
+    custom_walk(city::City, numTrials::Int)
+    
+    Performs a custom walk to generate itineraries for vehicles in a given city.
+    
+    Parameters:
+    - rng (AbstractRNG): The random number generator.
+    - city (City): The city information containing details such as total duration, number of cars, starting junction, and streets.
+    
+    Returns:
+    - TrialResults: A list of the results from running numTrials trials
+    """
+    function custom_walk(city::City, numTrials::Int)
+        TrialResults = []
+        distances, previous = djk(city,4517)
+        for i in 1:numTrials
+            ans = laterRandomWalk(previous,city)
+            if ans == -1
+                continue
+            end
+            sol = Solution(ans)
+            totalDistance = HashCode2014.total_distance(sol, city)
+            println("Attempt ", i, ": ",totalDistance)
+            push!(TrialResults,totalDistance)
+        end
+        return TrialResults
+    end
+
+    """
+    findMaximumEndpoints()
+    
+    Scans through each of the junctions in the city graphs and identitifies the furtherest point in each of the 8 cardinal directions
+    
+    Parameters:
+    None
+    
+    Returns:
+    - List of the most extreme junctions in each of the cardinal directions that will serve as the target points for each of the 8 cars
+    
+    """
+    function findMaximumEndpoints()
+
+        juncs = []
+        mostNorth = 4517
+        mostSouth = 4517
+        mostEast = 4517
+        mostWest = 4517
+
+        mostNorthEast = 4517
+        mostSouthEast = 4517
+        mostNorthWest = 4517
+        mostSouthWest = 4517
+
+        for i in 1:length(city.junctions)
+            #check if these are the most in a certain cardinal direction
+            if city.junctions[i].latitude > city.junctions[mostNorth].latitude
+                mostNorth = i
+            elseif city.junctions[i].latitude < city.junctions[mostSouth].latitude
+                mostSouth = i
+            elseif city.junctions[i].longitude > city.junctions[mostEast].longitude
+                mostEast = i
+            elseif city.junctions[i].longitude < city.junctions[mostWest].longitude
+                mostWest = i
+            end
+
+            #check if most in the combined cardinal directions
+            if city.junctions[i].latitude > city.junctions[mostNorthEast].latitude && city.junctions[i].longitude > city.junctions[mostNorthEast].longitude
+                mostNorthEast = i
+            elseif city.junctions[i].latitude < city.junctions[mostSouthEast].latitude && city.junctions[i].longitude > city.junctions[mostSouthEast].longitude
+                mostSouthEast = i
+            elseif city.junctions[i].latitude > city.junctions[mostNorthWest].latitude && city.junctions[i].longitude < city.junctions[mostNorthWest].longitude
+                mostNorthWest = i
+            elseif city.junctions[i].latitude < city.junctions[mostSouthWest].latitude && city.junctions[i].longitude < city.junctions[mostSouthWest].longitude
+                mostSouthWest = i
+            end
+
+        end
+        return mostNorth, mostSouth, mostEast, mostWest, mostNorthEast, mostNorthWest, mostSouthEast, mostSouthWest
+    end
+
+
+    """
+    getMinUnseen(unseenNodes, distances)
+    
+    Helper function for Djikstra's algorithm. Given a set of unseen nodes and the djikstra's distances vector, 
+    identifies the minimum distance node to use next in the search.
+    
+    Parameters:
+    - unseenNodes: set of unseen/unvisited nodes that we must choose from
+    - distances: djikstra style distances vector that has the current mininum distance to each node
+    
+    Returns:
+    - minNode: node that has the minimum current distance amoung unvisited nodes
+    
+    """    
+    function getMinUnseen(unseenNodes:: Set{Int}, distances::Vector{Int})
+        minDist = typemax(Int)
+        minNode = typemin(Int)
+
+        #get the minumum distance node of the unseen nodes
+        for node in unseenNodes
+            if distances[node] < minDist
+                minDist = distances[node]
+                minNode = node
+            end
+        end
+        return minNode
+    end
+
+
+    """
+    djk(city::City, startJunc::Int)
+    
+    Djikstra's algorithm to identify the shortest path from the start point to every other node in the graph.
+    Uses standard Djikstra's implementation
+    
+    Parameters:
+    - city (City): The city object containing information about nodes and edges.
+    - startJunc (junction): junction at which to start the search
+    
+    Returns:
+    - distances: returns vector that contains the minimum distance from the start node to each of the other nodes in the graph
+    - previous: returns a vector that, for each node, has the previous node that would go in front of it in the shortest path
+        this is done in standard djikstra formulation.
+    
+    """
+    function djk(city::City, startJunc::Int)
+        #initialization
+        distances = Vector{Int}(undef, length(city.junctions))
+        unseenNodes = Set{Int}([])
+        previous = Vector{Int}(undef, length(city.junctions))
+
+        #initialize distances and unseen nodes vector
+        for i in 1:length(city.junctions)
+            if i != startJunc
+                distances[i] = typemax(Int)
+            end
+            push!(unseenNodes,i)
+        end
+
+        #djikstras implementation of selecting the lowest distance vector and searching its neigbhors, updating the structs as neccesary
+        while length(unseenNodes) > 0
+            curNode = getMinUnseen(unseenNodes,distances)
+            delete!(unseenNodes,curNode)
+
+            for (neighbor, dist,time) in getJuncOptions(city,curNode)
+                alt = distances[curNode] + dist
+                if alt < distances[neighbor]
+                    distances[neighbor] = alt
+                    previous[neighbor] = curNode
+                end
+            end
+        end
+
+        return distances, previous
+    end 
+
+
+    """
+    getPathToNode(endNode::Int, previous)
+    
+    Given a node and the previous set, reconstructs the shortest path from the starting point to that end node
+    
+    Parameters:
+    - endNode: node to create the path to
+    - previous: a vector that, for each node, has the previous node that would go in front of it in the shortest path
+    this is done in standard djikstra formulation.
+    
+    Returns:
+    - nodeList: list of nodes that form the shortest path from the startpoint (4517) to the node
+    
+    """
+    function getPathToNode(curNode::Int, previous)
+
+        nodeList = []
+
+        #until get back to the start, continue backtracking from the node to find the original starting point
+        while curNode != 4517
+            push!(nodeList, curNode)
+            if curNode == 0 || curNode > length(previous) #build in fault tolerance
+                return -1
+            end
+            curNode = previous[curNode]
+        end
+
+        #reverse and return list to get total path
+        push!(nodeList,4517)
+        return reverse!(nodeList)
+    end
+
+    """
+    getPathTime(path :: Vector{Int},city :: City)
+    
+    Given a path, gets the total time that a car has spent on that path in order to understand how much time the car has left
+    
+    Parameters:
+    - path: list of nodes that form the path that the car has already traveled
+    - city: standard city object
+    
+    Returns:
+    - totalTime: The total time that the car has already spent traveling
+    
+    """
+    function getPathTime(path :: Vector{Int},city :: City)
+        totalTime = 0
+        for i in 2:length(path)
+            for street in city.streets
+                if street.endpointA == path[i-1] && street.endpointB == path[i+0]
+                    totalTime += street.duration
+                elseif street.endpointB == path[i-1] && street.endpointA == path[i+0] && street.bidirectional
+                    totalTime += street.duration
+                end
+            end
+        end
+        return totalTime
+    end
+
+    """
+    laterRandomWalk(previous :: Vector{Int}, city:: Int)
+    
+    Given the results of the djikstra algorithm, travels the cars to the endpoints and then random walks them around the area to cover
+    the most distance possible
+    
+    Parameters:
+    - previous: a vector that, for each node, has the previous node that would go in front of it in the shortest path
+    this is done in standard djikstra formulation.
+    - city: standard city object containing information about the junctions and streets
+    
+    Returns:
+    - itineraries: set of num_cars itineraries that represent the suggest paths for each car to be used in the solution
+    
+    """
+    function laterRandomWalk(previous :: Vector{Int}, city:: City)
+        (; total_duration, nb_cars, starting_junction, streets) = city
+        itineraries = Vector{Vector{Int}}(undef, nb_cars)
+        
+        #get set of paths to each of the extreme nodes using djikstras algorithm
+        pathNames = [7847,533,4507,2510,1533,649,565,2081]
+        for i in 1:length(pathNames)
+            path = getPathToNode(pathNames[i + 0],previous)
+            if path == -1
+                return -1
+            end
+            itineraries[i] = path[1:length(path) - 2]
+        end
+
+        #once at each node, undergo a random walk until the car runs out of time to travel
+        for c in 1:8
+            itinerary = itineraries[c]
+            duration = getPathTime(itinerary,city)
+            visited_streets = Set{Int}()
+            while true
+                current_junction = last(itinerary)
+
+                #assemble possible candidates for the car to move to
+                candidates = [
+                    (s, street) for (s, street) in enumerate(streets) if (
+                        HashCode2014.is_street_start(current_junction, street) &&
+                        duration + street.duration <= total_duration
+                    )
+                ]
+
+                #prioritize the possible candidates that the car has not yet visisted
+                optimalCandidates = []
+                for candidate in candidates
+                    if !(candidate in visited_streets)
+                        push!(optimalCandidates, candidate)
+                    end
+                end
+
+                #if there are unvisited streets, visit them first, if not then take a random walk or end the loop
+                if !isempty(optimalCandidates)
+                    s, street = rand(default_rng(), optimalCandidates)
+                elseif !isempty(candidates)
+                    s, street = rand(default_rng(), candidates)
+                else
+                    break
+                end
+
+                #update the itinerary and mark the street as visisted before continuing the loop
+                next_junction = HashCode2014.get_street_end(current_junction, street)
+                push!(itinerary, next_junction)
+                duration += street.duration
+                push!(visited_streets, s)
+            end
+            itineraries[c] = itinerary
+        end
+        return itineraries
     end
 
     """
@@ -301,6 +550,8 @@ module HashCode
         is_feasible(solution, city)
     end
 
+    city = HashCode2014.read_city()
+
     #Run once for 54000 bound
     visitedSet = Set{Int}([])
     visitedStreets = [Set{Int}([]) for i in 1:length(city.streets)]
@@ -313,5 +564,14 @@ module HashCode
     visitedStreets = [Set{Int}([]) for i in 1:length(city.streets)]
     distances = []
     DFS(city,4517,0,18000)
-    print("18000 Sec Bound: ", sum(distances))
+    println("18000 Sec Bound: ", sum(distances))
+    println(length(city.streets))
+    println()
+
+    #Find maximum endpoints to send cars to
+    println(findMaximumEndpoints())
+    resList = custom_walk(city, 10)
+    println("-----------------")
+    println("Final Answer: ", maximum(resList))
+
 end
