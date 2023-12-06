@@ -50,6 +50,8 @@ distances = []
 DFS(city, 4517, 0, 54_000)
 println("54,000 Sec Bound: ", sum(distances))
 ```
+## Testing
+Please see src/tutorial.jl for a tutorial
 
 ## Testing
 To run the unit tests, in a Julia REPL:
